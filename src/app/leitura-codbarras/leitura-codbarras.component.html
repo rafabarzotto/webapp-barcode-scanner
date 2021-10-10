@@ -53,6 +53,8 @@
         <p>QRCODE: {{leituras.qr}}</p>
     </blockquote>
 
+    <button mat-button color="primary" (click)="reiniciarLeitura()">Reiniciar Leitura</button>
+
 </ng-container> 
 
 <ng-container *ngIf="hasPermission === undefined">

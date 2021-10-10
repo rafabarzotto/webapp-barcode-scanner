@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { BarcodeFormat } from '@zxing/library';
 import { BehaviorSubject } from 'rxjs';
@@ -39,7 +40,7 @@ export class LeituraCodbarrasComponent {
   torchAvailable$ = new BehaviorSubject<boolean>(false);
   tryHarder = false;
 
-  constructor(private readonly _dialog: MatDialog) { }
+  constructor(private readonly _dialog: MatDialog, private router: Router,) { }
 
   clearResult(): void {
     this.qrResultString = null;
@@ -103,14 +104,14 @@ export class LeituraCodbarrasComponent {
         a.remove();
 
         if(this.etapa == 1){
-          this.leituras.qr = this.qrResultString;
+          this.leituras.cb = this.qrResultString;
           this.allowedFormats = [];
-          this.allowedFormats.push(BarcodeFormat.QR_CODE)
+          this.allowedFormats.push(BarcodeFormat.QR_CODE);
           this.etapa = 2;
         }
 
         else if(this.etapa == 2){
-          this.leituras.cb = this.qrResultString;
+          this.leituras.qr = this.qrResultString;
           this.showScanner = false;
           this.etapa = 3;
         }
@@ -122,6 +123,19 @@ export class LeituraCodbarrasComponent {
 
       }
     });
+  }
+
+  reiniciarLeitura() {
+    console.log('Clicou');
+    this.etapa = 1;
+    this.clearResult();
+    this.leituras.qr = '';
+    this.leituras.cb = '';
+    this.allowedFormats = [];
+    this.allowedFormats.push(BarcodeFormat.CODE_128,
+      BarcodeFormat.EAN_13);    
+    this.showScanner = true;
+    this.router.navigateByUrl('/');
   }
 
 }
